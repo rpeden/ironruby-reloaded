@@ -1,4 +1,4 @@
-# IronRuby Reloaded
+# IronRuby
 
 Welcome to my attempt at bringing IronRuby back to life! 
 
