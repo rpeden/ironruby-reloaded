@@ -4,6 +4,9 @@ Welcome to my attempt at bringing IronRuby back to life!
 
 It is a work in process, but already runs happily on both .NET 6+ and .NET Framework 4.6.2+. Check back for more details soon!
 
+IronRuby is an implement of the Ruby language that runs on the .NET CLR. Its last release was in 2010, so I'm trying to get all the bits and pieces working correctly on modern .NET platforms first, and then (hopefully) start adding features from newer Ruby releases.
+
+
 Content description
 -------------------
 
