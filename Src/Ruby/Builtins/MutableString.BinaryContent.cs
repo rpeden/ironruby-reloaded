@@ -83,11 +83,11 @@ namespace IronRuby.Builtins {
                 // TODO: split into chunks for large strings?
                 fallback.Track = true;
 #if NET6_0_OR_GREATER
-                var dataSpan = new Memory<byte>(_data);
-                chars = new char[decoder.GetCharCount(dataSpan.Span, true)];
-                var charSpan = new Memory<char>(chars);
+                var dataSpan = new ReadOnlySpan<byte>(_data);
+                chars = new char[decoder.GetCharCount(dataSpan, true)];
+                var charSpan = new Span<char>(chars);
                 fallback.Track = false;
-                decoder.GetChars(dataSpan.Span, charSpan.Span, true);
+                decoder.GetChars(dataSpan, charSpan, true);
 #else
                 chars = new char[decoder.GetCharCount(_data, 0, _count, true)];
                 
