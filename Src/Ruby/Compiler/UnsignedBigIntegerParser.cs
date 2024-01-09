@@ -19,9 +19,44 @@ using System.Linq;
 using Microsoft.Scripting.Utils;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace IronRuby.Compiler {
 
+    public static class BigIntegerHelpers
+    {
+        public static BigInteger Create(int sign, Span<uint> data)
+        {
+            BigInteger value;
+            //ContractUtils.RequiresNotNull(data, "data");
+            ContractUtils.Requires(sign >= -1 && sign <= +1, "sign");
+            int length = data.Length;
+            ContractUtils.Requires(length == 0 || sign != 0, "sign");
+            if (length == 0)
+            {
+                return 0;
+            }
+
+            bool highest = (data[length - 1] & 0x80000000) != 0;
+            byte[] bytes = new byte[length * 4 + (highest ? 1 : 0)];
+            int j = 0;
+            for (int i = 0; i < length; i++) {
+                ulong w = data[i];
+                bytes[j++] = (byte)(w & 0xff);
+                bytes[j++] = (byte)((w >> 8) & 0xff);
+                bytes[j++] = (byte)((w >> 16) & 0xff);
+                bytes[j++] = (byte)((w >> 24) & 0xff);
+            }
+
+            value = new BigInteger(bytes);
+            if (sign < 0) {
+                value = -value;
+            }
+
+            return value;
+        }
+        
+    }
     /// <summary>
     /// TODO: move to DLR.
     /// </summary>
@@ -47,7 +82,7 @@ namespace IronRuby.Compiler {
 
         public BigInteger ParseOctal(int digitCount) {
             ContractUtils.Requires(digitCount > 0, "digitCount");
-
+            
             const int BitsPerWord = 32;
             const int BitsPerDigit = 3;
             const int DigitsPerWord = BitsPerWord / BitsPerDigit;
@@ -74,12 +109,7 @@ namespace IronRuby.Compiler {
                 ReadOctalTriword(result, i, DigitsPerWord);
             }
 
-            List<byte> bytes = new List<byte>();
-            foreach (uint value in result)
-            {
-                bytes.AddRange(BitConverter.GetBytes(value));
-            }
-            return new BigInteger(bytes.ToArray());
+            return BigIntegerHelpers.Create(+1, result); 
         }
 
         private void ReadOctalTriword(uint[]/*!*/ result, int i, int digits) {
@@ -164,7 +194,7 @@ namespace IronRuby.Compiler {
 
             const int BitsPerWord = 32;
 
-            Debug.Assert(BitsPerWord % bitsPerDigit == 0);
+            Debug.Assert(BitsPerWord % bitsPerDigit == 0, $"BitsPerWord % bitsPerDigit == 0, {BitsPerWord} % {bitsPerDigit} == 0");
             int digitsPerWord = BitsPerWord / bitsPerDigit;
 
             int remainingDigits = digitCount % digitsPerWord;
@@ -176,12 +206,7 @@ namespace IronRuby.Compiler {
                 result[i] = ReadBinaryWord(digitsPerWord, bitsPerDigit);
             }
 
-            List<byte> bytes = new List<byte>();
-            foreach (uint value in result)
-            {
-                bytes.AddRange(BitConverter.GetBytes(value));
-            }
-            return new BigInteger(bytes.ToArray());
+            return BigIntegerHelpers.Create(+1, result);
         }
 
         // data = data * x + carry

@@ -1600,8 +1600,10 @@ add 'foo', 'bar'
                 optimizedTime.Start();
                 b = p.Parse(s.Length, @base);
                 optimizedTime.Stop();
-
-                Assert(b.ToString(@base) == s.TrimStart('0'));
+                
+                var original = b.ToString(@base);
+                var trimmed = s.TrimStart('0');
+                Assert(b.ToString(@base) == s.TrimStart('0'), $"Failed to parse {s} in base {@base}, instead got {original}");
 
                 p.Position = 0;
 
@@ -1609,7 +1611,7 @@ add 'foo', 'bar'
                 b = p.ParseDefault(s.Length, (uint)@base);
                 universalTime.Stop();
 
-                Assert(b.ToString(@base) == s.TrimStart('0'));
+                Assert(b.ToString(@base) == s.TrimStart('0'), $"Failed to parse {s} in base {@base}, instead got {original}");
             }
 
             if (repeat != 0) {

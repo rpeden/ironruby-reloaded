@@ -585,7 +585,9 @@ namespace IronRuby.Tests {
                 Scenario_RubyExceptions9,
                 Scenario_RubyExceptions10,
                 Scenario_RubyExceptions11,
+                #if FEATURE_REFEMIT
                 Scenario_RubyExceptions12,
+                #endif
                 Scenario_RubyExceptions12A,
                 Scenario_RubyExceptions13,
                 Scenario_RubyExceptions14,
@@ -645,7 +647,9 @@ namespace IronRuby.Tests {
                 MainSingleton2,
                 Singletons1A,
                 Singletons1B,
+                #if FEATURE_REFEMIT
                 Singletons1C,
+                #endif
                 Singletons1D,
                 Singletons2,
                 Singletons3,
@@ -789,7 +793,8 @@ namespace IronRuby.Tests {
                 Backtrace5,
                 Backtrace6,
                 Backtrace7,
-
+                
+                #if FEATURE_REFEMIT
                 Dlr_RubySnippet,
                 Dlr_ClrSubtype,
                 Dlr_MethodMissing,
@@ -797,6 +802,7 @@ namespace IronRuby.Tests {
                 Dlr_Conversions1,
                 Dlr_Splatting1,
                 Dlr_Indexable,
+                #endif
                 Dlr_Number,
                 Dlr_Comparable,
                 Dlr_Equatable,

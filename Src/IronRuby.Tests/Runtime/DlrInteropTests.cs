@@ -35,6 +35,7 @@ using IronRuby.Runtime;
 using System.Collections.Generic;
 using System.Numerics;
 
+
 namespace IronRuby.Tests {
     #region Custom binders
 
@@ -554,7 +555,7 @@ end
             Assert(result.Count == 2 && (int)result[0] == 100 && (int)result[1] == 200);
 #endif
         }
-
+#if FEATURE_REFEMIT
         public void Dlr_MethodMissing() {
             var scope = CreateInteropScope();
             object dynamic_object = scope.GetVariable("dynamic_object");
@@ -572,7 +573,7 @@ end
 
             AreEqual(MyInvokeMemberBinder.Invoke(dynamic_object, "explicit_attribute"), "explicit_attribute");
         }
-
+#endif
         public void Dlr_Miscellaneous() {
             var scope = CreateInteropScope();
             object misc_object = scope.GetVariable("misc");

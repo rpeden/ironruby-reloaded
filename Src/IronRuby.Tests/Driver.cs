@@ -85,7 +85,7 @@ namespace IronRuby.Tests {
             languageSetup.Options["ApplicationBase"] = _driver.BaseDirectory;
             languageSetup.Options["NoAdaptiveCompilation"] = _driver.NoAdaptiveCompilation;
             languageSetup.Options["CompilationThreshold"] = _driver.CompilationThreshold;
-            languageSetup.Options["Verbosity"] = 2;
+            languageSetup.Options["Verbosity"] = 3;
 
             _runtime = Ruby.CreateRuntime(runtimeSetup);
             _engine = Ruby.GetEngine(_runtime);
