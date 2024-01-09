@@ -2,7 +2,9 @@
   "profiles": {
     "Ruby.Console": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\IronRubyDev\\ironruby-orig-updated\\bin\\Release\\net462\\irb"
+      "environmentVariables": {
+        "LANG": "en_CA.UTF-8"
+      }
     }
   }
 }

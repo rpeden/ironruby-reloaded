@@ -635,13 +635,14 @@ namespace IronRuby.Runtime {
             }
         }
 
-        private void InitializeFileDescriptors(SharedIO/*!*/ io) {
+        private void InitializeFileDescriptors(SharedIO/*!*/ io)
+        {
             Debug.Assert(_fileDescriptors.Count == 0);
-            Stream stream = new ConsoleStream(io, ConsoleStreamType.Input);                
+            Stream stream = new ConsoleStream(ConsoleStreamType.Input);                
             StandardInput = new RubyIO(this, stream, AllocateFileDescriptor(stream), IOMode.ReadOnly);
-            stream = new ConsoleStream(io, ConsoleStreamType.Output);
+            stream = new ConsoleStream(ConsoleStreamType.Output);
             StandardOutput = new RubyIO(this, stream, AllocateFileDescriptor(stream), IOMode.WriteOnly | IOMode.WriteAppends);
-            stream = new ConsoleStream(io, ConsoleStreamType.ErrorOutput);
+            stream = new ConsoleStream(ConsoleStreamType.ErrorOutput);
             StandardErrorOutput = new RubyIO(this, stream, AllocateFileDescriptor(stream), IOMode.WriteOnly | IOMode.WriteAppends);
         }
 

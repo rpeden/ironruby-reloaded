@@ -181,12 +181,25 @@ namespace IronRuby.Runtime {
             return Math.Max(minLength, Math.Max(1 + (array.Length << 1), typeof(T) == typeof(object) ? MinListSize : MinBufferSize));
         }
 
+        internal static int GetExpandedSize<T>(Span<T>/*!*/ span, int minLength) {
+            return Math.Max(minLength, Math.Max(1 + (span.Length << 1), typeof(T) == typeof(object) ? MinListSize : MinBufferSize));
+        }
+        
         internal static void Resize<T>(ref T[]/*!*/ array, int minLength) {
             if (array.Length < minLength) {
                 Array.Resize(ref array, GetExpandedSize(array, minLength));
             }
         }
 
+        internal static void Resize<T>(ref Span<T>/*!*/ span, int minLength) {
+            if (span.Length < minLength) {
+                var newSpan = new Span<T>(new T[GetExpandedSize(span, minLength)], 0, minLength);
+                var success = span.TryCopyTo(newSpan);
+                Debug.Assert(success);
+                span = newSpan;
+            }
+        }
+        
         internal static void TrimExcess<T>(ref T[] data, int count) {
             if (IsSparse(count, data.Length)) {
                 Array.Resize(ref data, count);
@@ -216,6 +229,14 @@ namespace IronRuby.Runtime {
             // TODO: can be optimized for big repeatCount:
             for (int i = index; i < index + repeatCount; i++) {
                 array[i] = item;
+            }
+        }
+
+        internal static void Fill<T>(Span<T> /*!*/ span, int index, T item, int repeatCount)
+        {
+            for (int i = index; i < index + repeatCount; i++)
+            {
+                span[i] = item;
             }
         }
 
@@ -284,7 +305,17 @@ namespace IronRuby.Runtime {
             Array.Copy(other, start, array, itemCount, count);
             return newCount;
         }
-
+        
+        internal static int Append<T>(ref T[]/*!*/ array, int itemCount, Span<T>/*!*/ other, int start, int count) {
+            int newCount = itemCount + count;
+            Resize(ref array, newCount);
+            // append the new items
+            for (int i = 0; i < count; i++) {
+                array[itemCount + i] = other[start + i];
+            }
+            return newCount;
+        }
+        
         internal static int Append(ref byte[]/*!*/ array, int itemCount, string/*!*/ other, int start, int count, Encoding/*!*/ encoding) {
             char[] appendChars;
             int newCount = itemCount + GetByteCount(other, start, count, encoding, out appendChars);
@@ -322,6 +353,13 @@ namespace IronRuby.Runtime {
             return itemCount + repeatCount;
         }
 
+        internal static int InsertAt<T>(Span<T>/*!*/ array, int itemCount, int index, T other, int repeatCount) {
+            // assume we've done any needed resizing externall
+            
+            Fill(array, index, other, repeatCount);
+            return itemCount + repeatCount;
+        }
+        
         internal static int InsertAt(ref char[]/*!*/ array, int itemCount, int index, string/*!*/ other, int start, int count) {
             ResizeForInsertion(ref array, itemCount, index, count);
             other.CopyTo(start, array, index, count);

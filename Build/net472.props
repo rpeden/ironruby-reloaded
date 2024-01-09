@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build">
   <PropertyGroup>
     <WpfReferences Condition="'$(WpfReferences)' == ''">$(SolutionDir)..\Util\References\WPF\4.0</WpfReferences>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     
     <IsSilverlight>false</IsSilverlight>
     <IsFullFramework>true</IsFullFramework>
@@ -74,6 +74,7 @@
     <Features>$(Features);FEATURE_READONLY_DICTIONARY</Features>
     <Features>$(Features);FEATURE_SORTKEY</Features>
     <Features>$(Features);FEATURE_READONLY_COLLECTION_INTERFACE</Features>
+    <Features>$(Features);FEATURE_CORE_DLR</Features>
   </PropertyGroup>
 
   <!-- <ItemGroup>

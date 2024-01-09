@@ -110,7 +110,7 @@ namespace IronRuby.Compiler.Generation {
 
 #if FEATURE_REFEMIT
             string typeName = GetName(baseType);
-#if NET462_OR_GREATER
+#if NET472_OR_GREATER
             AssemblyName aName = new AssemblyName(typeName);
             var builder = AppDomain.CurrentDomain.DefineDynamicAssembly(aName, AssemblyBuilderAccess.Run);
             ModuleBuilder mb = builder.DefineDynamicModule(aName.Name, true);

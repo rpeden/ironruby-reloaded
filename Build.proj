@@ -2,12 +2,12 @@
 <Project DefaultTargets="Build">
 
   <PropertyGroup>
-    <BuildFlavour Condition=" '$(BuildFlavour)' == '' ">Debug</BuildFlavour>
-    <MainPlatform Condition=" '$(MainPlatform)' == '' ">net462</MainPlatform>
+    <BuildFlavour Condition=" '$(BuildFlavour)' == '' ">$(Configuration)</BuildFlavour>
+    <MainPlatform Condition=" '$(MainPlatform)' == '' ">net472</MainPlatform>
     <MainBuildPrefix Condition=" '$(MainBuildPrefix)' == '' "></MainBuildPrefix>
 
     <NetTarget>net6.0</NetTarget>
-    <FrameworkTarget>net462</FrameworkTarget>
+    <FrameworkTarget>net472</FrameworkTarget>
     <RootDir>$(MSBuildThisFileDirectory)</RootDir>
     <Solution>$(RootDir)\Ruby.sln</Solution>
     <UtilDir>$(RootDir)\Util</UtilDir>
@@ -50,7 +50,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ReferencedPlatform Include="net462">
+    <ReferencedPlatform Include="net472">
       <BuildPrefix></BuildPrefix>
     </ReferencedPlatform>
     <ReferencedPlatform Include="net6.0">

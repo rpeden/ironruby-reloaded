@@ -3,7 +3,6 @@
   <PropertyGroup>
     <IsFullFramework>false</IsFullFramework>
     <FeatureCoreDlr>true</FeatureCoreDlr>
-    <!-- <TargetFramework>net6.0</TargetFramework> -->
   </PropertyGroup>
 
   <PropertyGroup>

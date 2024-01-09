@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>ir</AssemblyName>
-    <TargetFrameworks>net462;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <LangVersion>10</LangVersion>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="System.Runtime.Remoting" Condition="'$(TargetFramework)' == 'net462'" />
+    <Reference Include="System.Runtime.Remoting" Condition="'$(TargetFramework)' == 'net472'" />
   </ItemGroup>
 
 </Project>

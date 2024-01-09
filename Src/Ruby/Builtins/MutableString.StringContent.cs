@@ -380,6 +380,16 @@ namespace IronRuby.Builtins {
                 SwitchToBinary(count).Append(bytes, start, count);
             }
 
+            public override void Append(Span<byte> bytes, int start, int count)
+            {
+                SwitchToBinary(count).Append(bytes, start, count);
+            }
+
+            public override void Append(Memory<byte> bytes, int start, int count)
+            {
+                SwitchToBinary(count).Append(bytes, start, count);
+            }
+            
             public override void Append(Stream/*!*/ stream, int count) {
                 SwitchToBinary(count).Append(stream, count);
             }

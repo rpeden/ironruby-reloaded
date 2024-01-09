@@ -281,7 +281,7 @@ namespace IronRuby.Tests {
                 Console.WriteLine("Running in partial trust");
 
                 PermissionSet ps = CreatePermissionSet();
-#if NET462_OR_GREATER
+#if NET472_OR_GREATER
                 AppDomainSetup setup = new AppDomainSetup();
 
                 setup.ApplicationBase = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

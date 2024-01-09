@@ -140,6 +140,16 @@ namespace IronRuby.Builtins {
             : this(new BinaryContent(bytes, count, null), encoding) {
         }
 
+        // binary Span (doesn't make a copy of the array):
+        // used by RubyBufferedStream:
+        internal MutableString(Span<byte> bytes, RubyEncoding/*!*/ encoding)
+            : this(new BinaryContent(bytes, bytes.Length, null), encoding) {
+        }
+
+        internal MutableString(Memory<byte> bytes, RubyEncoding encoding)
+            : this(new BinaryContent(bytes, bytes.Length, null), encoding) {
+        }
+
         // immutable:
         private MutableString(string/*!*/ str, RubyEncoding/*!*/ encoding)
             : this(new StringContent(str, null), encoding) {
@@ -1718,6 +1728,13 @@ namespace IronRuby.Builtins {
             return this;
         }
 
+        // overload that accepts a Span<byte>
+        public MutableString/*!*/ Append(Span<byte> value) {
+            Mutate();
+            _content.Append(value, 0, value.Length);
+            return this;
+        }
+        
         public MutableString/*!*/ Append(byte[]/*!*/ value, int start, int count) {
             ContractUtils.RequiresNotNull(value, "value");
             ContractUtils.RequiresArrayRange(value, start, count, "start", "count");

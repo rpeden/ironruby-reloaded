@@ -14,6 +14,7 @@
  * ***************************************************************************/
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using Microsoft.Scripting.Utils;
 using System.Text;
@@ -21,6 +22,9 @@ using IronRuby.Compiler;
 using IronRuby.Runtime;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace IronRuby.Builtins {
     public partial class MutableString {
@@ -29,7 +33,10 @@ namespace IronRuby.Builtins {
         /// All indices and counts are in bytes.
         /// </summary>
         [Serializable]
-        internal class BinaryContent : Content {
+        internal class BinaryContent : Content
+        {
+
+            protected Memory<byte> _memoryData;
             protected byte[] _data;
             protected int _count;
 
@@ -42,6 +49,25 @@ namespace IronRuby.Builtins {
                 Assert.NotNull(data);
                 Debug.Assert(count >= 0 && count <= data.Length);
                 _data = data;
+                //_memoryData = data;
+                _count = count;
+            }
+
+            internal BinaryContent(Span<byte>/*!*/ data, int count, MutableString owner)
+                : base(owner) {
+                //Assert.NotNull(data);
+                Debug.Assert(count >= 0 && count <= data.Length);
+                _data = data.ToArray();
+                _memoryData = new Memory<byte>(data.ToArray());
+                _count = count;
+            }
+            
+            internal BinaryContent(Memory<byte>/*!*/ data, int count, MutableString owner)
+                : base(owner) {
+                //Assert.NotNull(data);
+                Debug.Assert(count >= 0 && count <= data.Length);
+                _data = data.ToArray();
+                //_memoryData = data;
                 _count = count;
             }
 
@@ -54,13 +80,20 @@ namespace IronRuby.Builtins {
                 Decoder decoder = _owner.Encoding.Encoding.GetDecoder();
                 var fallback = new LosslessDecoderFallback();
                 decoder.Fallback = fallback;
-
                 // TODO: split into chunks for large strings?
                 fallback.Track = true;
+#if NET6_0_OR_GREATER
+                var dataSpan = new Memory<byte>(_data);
+                chars = new char[decoder.GetCharCount(dataSpan.Span, true)];
+                var charSpan = new Memory<char>(chars);
+                fallback.Track = false;
+                decoder.GetChars(dataSpan.Span, charSpan.Span, true);
+#else
                 chars = new char[decoder.GetCharCount(_data, 0, _count, true)];
+                
                 fallback.Track = false;
                 decoder.GetChars(_data, 0, _count, chars, 0, true);
-
+#endif
                 invalidCharacters = fallback.InvalidCharacters;
 #else
                 chars = _owner.Encoding.Encoding.GetChars(_data, 0, _count);
@@ -516,6 +549,15 @@ namespace IronRuby.Builtins {
 
             public override void Append(byte[]/*!*/ bytes, int start, int count) {
                 _count = Utils.Append(ref _data, _count, bytes, start, count);
+            }
+
+            public override void Append(Span<byte> bytes, int start, int count) {
+                _count = Utils.Append(ref _data, _count, bytes, start, count);
+            }
+
+            public override void Append(Memory<byte> str, int start, int count)
+            {
+                Append(str.Span, start, count);
             }
 
             public override void Append(Stream/*!*/ stream, int count) {

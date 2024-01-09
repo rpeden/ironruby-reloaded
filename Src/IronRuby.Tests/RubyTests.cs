@@ -807,7 +807,7 @@ namespace IronRuby.Tests {
                 Dlr_DynamicObject1, 
                 Dlr_DynamicObject2, 
                 Dlr_DynamicObject3,
-#if NET462_OR_GREATER
+#if NET472_OR_GREATER
                 Serialization1,
 #endif
 #if !CLR2

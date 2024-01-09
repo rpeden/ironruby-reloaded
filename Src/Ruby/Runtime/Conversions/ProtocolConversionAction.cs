@@ -310,7 +310,7 @@ namespace IronRuby.Runtime.Conversions {
         }
 
         private static Expression/*!*/ ConvertResult(Expression/*!*/ expression, Type/*!*/ resultType) {
-            if (resultType.IsGenericType() && resultType.GetGenericTypeDefinition() == typeof(Union<,>)) {
+            if (resultType.IsGenericType && resultType.GetGenericTypeDefinition() == typeof(Union<,>)) {
                 var args = resultType.GetGenericArguments();
                 var ctor = resultType.GetConstructor(args);
                 if (args[0].IsAssignableFrom(expression.Type)) {
